@@ -204,6 +204,7 @@
   {1, 1, "ISMOUSEBUTTONUP", cmd_ismousebuttonup},
   {1, 1, "ISMUSICSTREAMPLAYING", cmd_ismusicstreamplaying},
   {1, 1, "ISMUSICVALID", cmd_ismusicvalid},
+  {1, 1, "ISPATHDIRECTORY", cmd_ispathdirectory},
   {1, 1, "ISPATHFILE", cmd_ispathfile},
   {1, 1, "ISRENDERTEXTUREVALID", cmd_isrendertexturevalid},
   {1, 1, "ISSHADERVALID", cmd_isshadervalid},

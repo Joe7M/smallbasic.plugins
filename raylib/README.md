@@ -4,7 +4,7 @@ raylib is a simple and easy-to-use library to enjoy videogames programming.
 
 https://www.raylib.com/
 
-Implemented APIs (651)
+Implemented APIs (661)
 ----------------
 
 | Name    | Description   |
@@ -16,7 +16,7 @@ Implemented APIs (651)
 | sub BeginScissorMode(x, y, width, height) | Begin scissor mode (define screen area for following drawing) |
 | sub BeginShaderMode(shader) | Begin custom shader drawing |
 | sub BeginTextureMode(target) | Begin drawing to render texture |
-| func ChangeDirectory(dirPath) | Change working directory, return true on success |
+| func ChangeDirectory(dirPath) | Change working directory, returns 0 on success |
 | func CheckCollisionBoxes(box1, box2) | Check collision between two bounding boxes |
 | func CheckCollisionBoxSphere(box, center, radius) | Check collision between box and sphere |
 | func CheckCollisionCircleLine(center, radius, p1, p2) | Check if circle collides with a line created between two points [p1] and [p2] |
@@ -59,12 +59,12 @@ Implemented APIs (651)
 | func DecodeDataBase64(text, outputSize) | Decode Base64 string (expected NULL terminated), memory must be MemFree() |
 | func DecompressData(compData, compDataSize, dataSize) | Decompress data (DEFLATE algorithm), memory must be MemFree() |
 | func destroyPhysicsbody() | n/a |
-| func DirectoryExists(dirPath) | Check if a directory path exists |
+| func DirectoryExists(dirPath) | Check if directory path exists |
 | sub DisableCursor() | Disable cursor (lock cursor) |
 | sub DisableEventWaiting() | Disable waiting for events on EndDrawing(), automatic events polling |
 | sub DrawBillboard(camera, texture, position, scale, tint) | Draw a billboard texture |
-| sub DrawBillboardPro(camera, texture, source, position, up, size, origin, rotation, tint) | Draw a billboard texture defined by source and rotation |
-| sub DrawBillboardRec(camera, texture, source, position, size, tint) | Draw a billboard texture defined by source |
+| sub DrawBillboardPro(camera, texture, rec, position, up, size, origin, rotation, tint) | Draw a billboard texture defined by source rectangle with scaling and rotation |
+| sub DrawBillboardRec(camera, texture, rec, position, size, tint) | Draw a billboard texture defined by rectangle |
 | sub DrawBoundingBox(box, color) | Draw bounding box (wires) |
 | sub DrawCapsule(startPos, endPos, radius, rings, slices, color) | Draw a capsule with the center of its sphere caps at startPos and endPos |
 | sub DrawCapsuleWires(startPos, endPos, radius, rings, slices, color) | Draw capsule wireframe with the center of its sphere caps at startPos and endPos |
@@ -72,6 +72,7 @@ Implemented APIs (651)
 | sub DrawCircle3D(center, radius, rotationAxis, rotationAngle, color) | Draw a circle in 3D world space |
 | sub DrawCircleGradient(center, radius, inner, outer) | Draw a gradient-filled circle |
 | sub DrawCircleLines(centerX, centerY, radius, color) | Draw circle outline |
+| sub DrawCircleLinesEx(center, radius, thick, color) | Draw circle outline with line thickness |
 | sub DrawCircleLinesV(center, radius, color) | Draw circle outline (Vector version) |
 | sub DrawCircleSector(center, radius, startAngle, endAngle, segments, color) | Draw a piece of a circle |
 | sub DrawCircleSectorLines(center, radius, startAngle, endAngle, segments, color) | Draw circle sector outline |
@@ -80,10 +81,10 @@ Implemented APIs (651)
 | sub DrawCubeV(position, size, color) | Draw cube (Vector version) |
 | sub DrawCubeWires(position, width, height, length, color) | Draw cube wires |
 | sub DrawCubeWiresV(position, size, color) | Draw cube wires (Vector version) |
-| sub DrawCylinder(position, radiusTop, radiusBottom, height, slices, color) | Draw a cylinder/cone |
+| sub DrawCylinder(position, radiusTop, radiusBottom, height, sides, color) | Draw a cylinder/cone |
 | sub DrawCylinderEx(startPos, endPos, startRadius, endRadius, sides, color) | Draw a cylinder with base at startPos and top at endPos |
-| sub DrawCylinderWires(position, radiusTop, radiusBottom, height, slices, color) | Draw a cylinder/cone wires |
-| sub DrawCylinderWiresEx(startPos, endPos, startRadius, endRadius, slices, color) | Draw a cylinder wires with base at startPos and top at endPos |
+| sub DrawCylinderWires(position, radiusTop, radiusBottom, height, sides, color) | Draw a cylinder/cone wires |
+| sub DrawCylinderWiresEx(startPos, endPos, startRadius, endRadius, sides, color) | Draw a cylinder wires with base at startPos and top at endPos |
 | sub DrawEllipse(centerX, centerY, radiusH, radiusV, color) | Draw ellipse |
 | sub DrawEllipseLines(centerX, centerY, radiusH, radiusV, color) | Draw ellipse outline |
 | sub DrawEllipseLinesV(center, radiusH, radiusV, color) | Draw ellipse outline (Vector version) |
@@ -98,33 +99,33 @@ Implemented APIs (651)
 | sub DrawLineStrip(points, pointCount, color) | Draw lines sequence (using gl lines) |
 | sub DrawLineV(startPos, endPos, color) | Draw a line (using gl lines) |
 | sub DrawModel(model, position, scale, tint) | Draw a model (with texture if set) |
-| sub DrawModelEx(model, position, rotationAxis, rotationAngle, scale, tint) | Draw a model with extended parameters |
+| sub DrawModelEx(model, position, rotationAxis, rotationAngle, scale, tint) | Draw a model with custom transform |
 | sub DrawModelWires(model, position, scale, tint) | Draw a model wires (with texture if set) |
-| sub DrawModelWiresEx(model, position, rotationAxis, rotationAngle, scale, tint) | Draw a model wires (with texture if set) with extended parameters |
+| sub DrawModelWiresEx(model, position, rotationAxis, rotationAngle, scale, tint) | Draw a model wires with custom transform |
 | sub DrawPixel(posX, posY, color) | Draw a pixel using geometry [Can be slow, use with care] |
 | sub DrawPixelV(position, color) | Draw a pixel using geometry (Vector version) [Can be slow, use with care] |
 | sub DrawPlane(centerPos, size, color) | Draw a plane XZ |
 | sub DrawPoint3D(position, color) | Draw a point in 3D space, actually a small line |
 | sub DrawPoly(center, sides, radius, rotation, color) | Draw a polygon of n sides |
 | sub DrawPolyLines(center, sides, radius, rotation, color) | Draw a polygon outline of n sides |
-| sub DrawPolyLinesEx(center, sides, radius, rotation, lineThick, color) | Draw a polygon outline of n sides with extended parameters |
+| sub DrawPolyLinesEx(center, sides, radius, rotation, thick, color) | Draw a polygon outline of n sides with line thickness |
 | sub DrawRay(ray, color) | Draw a ray line |
 | sub DrawRectangle(posX, posY, width, height, color) | Draw a color-filled rectangle |
-| sub DrawRectangleGradientEx(rec, topLeft, bottomLeft, bottomRight, topRight) | Draw a gradient-filled rectangle with custom vertex colors |
+| sub DrawRectangleGradientEx(rec, col1, col2, col3, col4) | Draw a gradient-filled rectangle with custom vertex colors, counter-clockwise color order |
 | sub DrawRectangleGradientH(posX, posY, width, height, left, right) | Draw a horizontal-gradient-filled rectangle |
 | sub DrawRectangleGradientV(posX, posY, width, height, top, bottom) | Draw a vertical-gradient-filled rectangle |
 | sub DrawRectangleLines(posX, posY, width, height, color) | Draw rectangle outline |
-| sub DrawRectangleLinesEx(rec, lineThick, color) | Draw rectangle outline with extended parameters |
+| sub DrawRectangleLinesEx(rec, thick, color) | Draw rectangle outline with line thickness |
 | sub DrawRectanglePro(rec, origin, rotation, color) | Draw a color-filled rectangle with pro parameters |
 | sub DrawRectangleRec(rec, color) | Draw a color-filled rectangle |
 | sub DrawRectangleRounded(rec, roundness, segments, color) | Draw rectangle with rounded edges |
 | sub DrawRectangleRoundedLines(rec, roundness, segments, color) | Draw rectangle lines with rounded edges |
-| sub DrawRectangleRoundedLinesEx(rec, roundness, segments, lineThick, color) | Draw rectangle lines with rounded edges outline |
+| sub DrawRectangleRoundedLinesEx(rec, roundness, segments, thick, color) | Draw rectangle lines with rounded edges outline and line thickness |
 | sub DrawRectangleV(position, size, color) | Draw a color-filled rectangle (Vector version) |
 | sub DrawRing(center, innerRadius, outerRadius, startAngle, endAngle, segments, color) | Draw ring |
 | sub DrawRingLines(center, innerRadius, outerRadius, startAngle, endAngle, segments, color) | Draw ring outline |
 | sub DrawSphere(centerPos, radius, color) | Draw sphere |
-| sub DrawSphereEx(centerPos, radius, rings, slices, color) | Draw sphere with extended parameters |
+| sub DrawSphereEx(centerPos, radius, rings, slices, color) | Draw sphere with defined rings and slices |
 | sub DrawSphereWires(centerPos, radius, rings, slices, color) | Draw sphere wires |
 | sub DrawSplineBasis(points, pointCount, thick, color) | Draw spline: B-Spline, minimum 4 points |
 | sub DrawSplineBezierCubic(points, pointCount, thick, color) | Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...] |
@@ -142,16 +143,16 @@ Implemented APIs (651)
 | sub DrawTextEx(font, text, position, fontSize, spacing, tint) | Draw text using font and additional parameters |
 | sub DrawTextPro(font, text, position, origin, rotation, fontSize, spacing, tint) | Draw text using Font and pro parameters (rotation) |
 | sub DrawTexture(texture, posX, posY, tint) | Draw a Texture2D |
-| sub DrawTextureEx(texture, position, rotation, scale, tint) | Draw a Texture2D with extended parameters |
-| sub DrawTextureNPatch(texture, nPatchInfo, dest, origin, rotation, tint) | Draw a texture (or part of it) that stretches or shrinks nicely |
-| sub DrawTexturePro(texture, source, dest, origin, rotation, tint) | Draw a part of a texture defined by a rectangle with 'pro' parameters |
-| sub DrawTextureRec(texture, source, position, tint) | Draw a part of a texture defined by a rectangle |
+| sub DrawTextureEx(texture, position, rotation, scale, tint) | Draw a Texture2D with rotation and scale |
+| sub DrawTextureNPatch(texture, nPatchInfo, dstrec, origin, rotation, tint) | Draw a texture (or part of it) that stretches or shrinks nicely |
+| sub DrawTexturePro(texture, srcrec, dstrec, origin, rotation, tint) | Draw a part of a texture defined by a source rectangle to destination rectangle, with scaling and rotation |
+| sub DrawTextureRec(texture, rec, position, tint) | Draw a part of a texture defined by a rectangle |
 | sub DrawTextureV(texture, position, tint) | Draw a Texture2D with position defined as Vector2 |
-| sub DrawTriangle(v1, v2, v3, color) | Draw a color-filled triangle (vertex in counter-clockwise order!) |
-| sub DrawTriangle3D(v1, v2, v3, color) | Draw a color-filled triangle (vertex in counter-clockwise order!) |
+| sub DrawTriangle(v1, v2, v3, color) | Draw a color-filled triangle, counter-clockwise vertex order |
+| sub DrawTriangle3D(v1, v2, v3, color) | Draw a color-filled triangle, counter-clockwise vertex order |
 | sub DrawTriangleFan(points, pointCount, color) | Draw a triangle fan defined by points (first vertex is the center) |
-| sub DrawTriangleGradient(v1, v2, v3, c1, c2, c3) | Draw triangle with interpolated colors (vertex in counter-clockwise order!) |
-| sub DrawTriangleLines(v1, v2, v3, color) | Draw triangle outline (vertex in counter-clockwise order!) |
+| sub DrawTriangleGradient(v1, v2, v3, c1, c2, c3) | Draw triangle with interpolated colors, counter-clockwise vertex/color order |
+| sub DrawTriangleLines(v1, v2, v3, color) | Draw triangle outline, counter-clockwise vertex order |
 | sub DrawTriangleStrip(points, pointCount, color) | Draw a triangle strip defined by points |
 | sub DrawTriangleStrip3D(points, pointCount, color) | Draw a triangle strip defined by points |
 | sub EnableCursor() | Enable cursor (unlock cursor) |
@@ -176,13 +177,13 @@ Implemented APIs (651)
 | func ExportWave(wave, fileName) | Export wave data to file, returns true on success |
 | func ExportWaveAsCode(wave, fileName) | Export wave sample data to code (.h), returns true on success |
 | func Fade(color, alpha) | Get color with alpha applied, alpha goes from 0.0f to 1.0f |
-| func FileCopy(srcPath, dstPath) | Copy file from one path to another, dstPath created if it doesn't exist |
+| func FileCopy(srcPath, dstPath) | Copy file from one path to another, dstPath created if it doesn't exist, returns 0 on success |
 | func FileExists(fileName) | Check if file exists |
-| func FileMove(srcPath, dstPath) | Move file from one directory to another, dstPath created if it doesn't exist |
-| func FileRemove(fileName) | Remove file (if exists) |
-| func FileRename(fileName, fileRename) | Rename file (if exists) |
-| func FileTextFindIndex(fileName, search) | Find text in existing file |
-| func FileTextReplace(fileName, search, replacement) | Replace text in an existing file |
+| func FileMove(srcPath, dstPath) | Move file from one directory to another, dstPath created if it doesn't exist, returns 0 on success |
+| func FileRemove(fileName) | Remove file (if exists), returns 0 on success |
+| func FileRename(fileName, fileRename) | Rename file (if exists), returns 0 on success |
+| func FileTextFindIndex(fileName, search) | Find text in existing file, returns -1 if index not found or index otherwise |
+| func FileTextReplace(fileName, search, replacement) | Replace text in an existing file, returns 0 on success |
 | func GenImageCellular(width, height, tileSize) | Generate image: cellular algorithm, bigger tileSize means bigger cells |
 | func GenImageChecked(width, height, checksX, checksY, col1, col2) | Generate image: checked |
 | func GenImageColor(width, height, color) | Generate image: plain color |
@@ -361,23 +362,31 @@ Implemented APIs (651)
 | func ImageCopy(image) | Create an image duplicate (useful for transformations) |
 | sub ImageCrop(image, crop) | Crop an image to a defined rectangle |
 | sub ImageDither(image, rBpp, gBpp, bBpp, aBpp) | Dither image data to 16bpp or lower (Floyd-Steinberg dithering) |
-| sub ImageDraw(dst, src, srcRec, dstRec, tint) | Draw a source image within a destination image (tint applied to source) |
 | sub ImageDrawCircle(dst, centerX, centerY, radius, color) | Draw a filled circle within an image |
+| sub ImageDrawCircleGradient(dst, center, radius, inner, outer) | Draw a gradient-filled circle within an image |
 | sub ImageDrawCircleLines(dst, centerX, centerY, radius, color) | Draw circle outline within an image |
 | sub ImageDrawCircleLinesV(dst, center, radius, color) | Draw circle outline within an image (Vector version) |
 | sub ImageDrawCircleV(dst, center, radius, color) | Draw a filled circle within an image (Vector version) |
+| sub ImageDrawImage(dst, src, posX, posY, tint) | Draw an image within an image |
+| sub ImageDrawImageEx(dst, src, position, rotation, scale, tint) | Draw an image with scaling and rotation within an image |
+| sub ImageDrawImagePro(dst, src, srcRec, dstRec, origin, rotation, tint) | Draw a part of an image defined by a rectangle into destination rectangle, with scaling and rotation, within an image |
+| sub ImageDrawImageRec(dst, src, srcRec, position, tint) | Draw a part of an image defined by a rectangle within an image |
 | sub ImageDrawLine(dst, startPosX, startPosY, endPosX, endPosY, color) | Draw line within an image |
 | sub ImageDrawLineEx(dst, start, end, thick, color) | Draw a line defining thickness within an image |
+| sub ImageDrawLineStrip(dst, points, pointCount, color) | Draw a lines sequence within an image |
 | sub ImageDrawLineV(dst, start, end, color) | Draw line within an image (Vector version) |
 | sub ImageDrawPixel(dst, posX, posY, color) | Draw pixel within an image |
 | sub ImageDrawPixelV(dst, position, color) | Draw pixel within an image (Vector version) |
 | sub ImageDrawRectangle(dst, posX, posY, width, height, color) | Draw rectangle within an image |
+| sub ImageDrawRectangleGradientEx(dst, rec, col1, col2, col3, col4) | Draw rectangle with gradient colors within an image, counter-clockwise color order |
 | sub ImageDrawRectangleLines(dst, posX, posY, width, height, color) | Draw rectangle lines within an image |
-| sub ImageDrawRectangleLinesEx(dst, rec, thick, color) | Draw rectangle lines within an image with extended parameters |
+| sub ImageDrawRectangleLinesEx(dst, rec, thick, color) | Draw rectangle lines within an image with line thickness |
+| sub ImageDrawRectanglePro(dst, rec, origin, rotation, color) | Draw a color-filled rectangle with pro parameters within and image |
 | sub ImageDrawRectangleRec(dst, rec, color) | Draw rectangle within an image |
 | sub ImageDrawRectangleV(dst, position, size, color) | Draw rectangle within an image (Vector version) |
 | sub ImageDrawText(dst, text, posX, posY, fontSize, color) | Draw text (using default font) within an image (destination) |
 | sub ImageDrawTextEx(dst, font, text, position, fontSize, spacing, tint) | Draw text (custom sprite font) within an image (destination) |
+| sub ImageDrawTextPro(dst, font, text, position, origin, rotation, fontSize, spacing, tint) | Draw text using Font and pro parameters (rotation) |
 | sub ImageDrawTriangle(dst, v1, v2, v3, color) | Draw triangle within an image |
 | sub ImageDrawTriangleFan(dst, points, pointCount, color) | Draw a triangle fan defined by points within an image (first vertex is the center) |
 | sub ImageDrawTriangleGradient(dst, v1, v2, v3, c1, c2, c3) | Draw triangle with interpolated colors within an image |
@@ -408,36 +417,37 @@ Implemented APIs (651)
 | func IsAudioStreamValid(stream) | Check if an audio stream is valid (buffers initialized) |
 | func IsCursorHidden() | Check if cursor is not visible |
 | func IsCursorOnScreen() | Check if cursor is on the screen |
-| func IsFileDropped() | Check if a file has been dropped into window |
+| func IsFileDropped() | Check if file has been dropped into window |
 | func IsFileExtension(fileName, ext) | Check file extension (recommended include point: .png, .wav) |
 | func IsFileNameValid(fileName) | Check if fileName is valid for the platform/OS |
-| func IsFontValid(font) | Check if a font is valid (font data loaded, WARNING: GPU texture not checked) |
-| func IsGamepadAvailable(gamepad) | Check if a gamepad is available |
-| func IsGamepadButtonDown(gamepad, button) | Check if a gamepad button is being pressed |
-| func IsGamepadButtonPressed(gamepad, button) | Check if a gamepad button has been pressed once |
-| func IsGamepadButtonReleased(gamepad, button) | Check if a gamepad button has been released once |
-| func IsGamepadButtonUp(gamepad, button) | Check if a gamepad button is NOT being pressed |
-| func IsGestureDetected(gesture) | Check if a gesture has been detected |
+| func IsFontValid(font) | Check if font is valid (font data loaded, WARNING: GPU texture not checked) |
+| func IsGamepadAvailable(gamepad) | Check if gamepad is available |
+| func IsGamepadButtonDown(gamepad, button) | Check if gamepad button is being pressed |
+| func IsGamepadButtonPressed(gamepad, button) | Check if gamepad button has been pressed once |
+| func IsGamepadButtonReleased(gamepad, button) | Check if gamepad button has been released once |
+| func IsGamepadButtonUp(gamepad, button) | Check if gamepad button is NOT being pressed |
+| func IsGestureDetected(gesture) | Check if gesture has been detected |
 | func IsImageValid(image) | Check if an image is valid (data and parameters) |
-| func IsKeyDown(key) | Check if a key is being pressed |
-| func IsKeyPressed(key) | Check if a key has been pressed once |
-| func IsKeyPressedRepeat(key) | Check if a key has been pressed again |
-| func IsKeyReleased(key) | Check if a key has been released once |
-| func IsKeyUp(key) | Check if a key is NOT being pressed |
+| func IsKeyDown(key) | Check if key is being pressed |
+| func IsKeyPressed(key) | Check if key has been pressed once |
+| func IsKeyPressedRepeat(key) | Check if key has been pressed again |
+| func IsKeyReleased(key) | Check if key has been released once |
+| func IsKeyUp(key) | Check if key is NOT being pressed |
 | func IsModelAnimationValid(model, anim) | Check model animation skeleton match |
-| func IsModelValid(model) | Check if a model is valid (loaded in GPU, VAO/VBOs) |
-| func IsMouseButtonDown(button) | Check if a mouse button is being pressed |
-| func IsMouseButtonPressed(button) | Check if a mouse button has been pressed once |
-| func IsMouseButtonReleased(button) | Check if a mouse button has been released once |
-| func IsMouseButtonUp(button) | Check if a mouse button is NOT being pressed |
+| func IsModelValid(model) | Check if model is valid (loaded in GPU, VAO/VBOs) |
+| func IsMouseButtonDown(button) | Check if mouse button is being pressed |
+| func IsMouseButtonPressed(button) | Check if mouse button has been pressed once |
+| func IsMouseButtonReleased(button) | Check if mouse button has been released once |
+| func IsMouseButtonUp(button) | Check if mouse button is NOT being pressed |
 | func IsMusicStreamPlaying(music) | Check if music is playing |
-| func IsMusicValid(music) | Check if a music stream is valid (context and buffers initialized) |
-| func IsPathFile(path) | Check if a given path is a file or a directory |
-| func IsRenderTextureValid(target) | Check if a render texture is valid (loaded in GPU) |
-| func IsShaderValid(shader) | Check if a shader is valid (loaded on GPU) |
-| func IsSoundPlaying(sound) | Check if a sound is currently playing |
-| func IsSoundValid(sound) | Check if a sound is valid (data loaded and buffers initialized) |
-| func IsTextureValid(texture) | Check if a texture is valid (loaded in GPU) |
+| func IsMusicValid(music) | Check if music stream is valid (context and buffers initialized) |
+| func IsPathDirectory(path) | Check if given path points to a directory |
+| func IsPathFile(path) | Check if given path points to a file |
+| func IsRenderTextureValid(target) | Check if render texture is valid (loaded in GPU) |
+| func IsShaderValid(shader) | Check if shader is valid (loaded on GPU) |
+| func IsSoundPlaying(sound) | Check if sound is currently playing |
+| func IsSoundValid(sound) | Check if sound is valid (data loaded and buffers initialized) |
+| func IsTextureValid(texture) | Check if texture is valid (loaded in GPU) |
 | func IsWaveValid(wave) | Check if wave data is valid (data loaded and parameters) |
 | func IsWindowFocused() | Check if window is currently focused |
 | func IsWindowFullscreen() | Check if window is currently fullscreen |
@@ -451,12 +461,12 @@ Implemented APIs (651)
 | func LoadAutomationEventList(fileName) | Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS |
 | func LoadCodepoints(text, count) | Load all codepoints from a UTF-8 text string, codepoints count returned by parameter |
 | func LoadDirectoryFiles(dirPath) | Load directory filepaths, files and directories, no subdirs scan |
-| func LoadDirectoryFilesEx(basePath, filter, scanSubdirs) | Load directory filepaths with extension filtering and subdir scan; some filters available: `*.*`,`FILES*`,`DIRS*` |
+| func LoadDirectoryFilesEx(basePath, filter, scanSubdirs) | Load directory filepaths with extension filtering and subdir scan; some filters available: '*.*','FILES*','DIRS*' |
 | func LoadDroppedFiles() | Load dropped filepaths |
 | func LoadFileData(fileName, dataSize) | Load file data as byte array (read) |
 | func LoadFileText(fileName) | Load text data from file (read), returns a '\\0' terminated string |
 | func LoadFont(fileName) | Load font from file into GPU memory (VRAM) |
-| func LoadFontEx(fileName, fontSize, codepoints, codepointCount) | Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height |
+| func LoadFontEx(fileName, fontSize, codepoints, codepointCount) | Load font from file with defined codepoints and generation size, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height |
 | func LoadFontFromImage(image, key, firstChar) | Load font from Image (XNA style) |
 | func LoadFontFromMemory(fileType, fileData, dataSize, fontSize, codepoints, codepointCount) | Load font from memory buffer, fileType refers to extension: i.e. '.ttf' |
 | func LoadImage(fileName) | Load image from file into CPU memory (RAM) |
@@ -568,7 +578,7 @@ Implemented APIs (651)
 | sub SetShaderValueMatrix(shader, locIndex, mat) | Set shader uniform value (matrix 4x4) |
 | sub SetShaderValueTexture(shader, locIndex, texture) | Set shader uniform value and bind the texture (sampler2d) |
 | sub SetShaderValueV(shader, locIndex, value, uniformType, count) | Set shader uniform value vector |
-| sub SetShapesTexture(texture, source) | Set texture and rectangle to be used on shapes drawing |
+| sub SetShapesTexture(texture, rec) | Set texture and rectangle to be used on shapes drawing |
 | sub SetSoundPan(sound, pan) | Set pan for a sound (-1.0 left, 0.0 center, 1.0 right) |
 | sub SetSoundPitch(sound, pitch) | Set pitch for a sound (1.0 is base level) |
 | sub SetSoundVolume(sound, volume) | Set volume for a sound (1.0 is max level) |
@@ -675,7 +685,7 @@ Unimplemented APIs
 | DrawMeshInstanced | Draw multiple mesh instances with material and different transforms |
 | GenImageFontAtlas | Generate image font atlas using chars info |
 | GetGlyphInfo | Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found |
-| IsMaterialValid | Check if a material is valid (shader assigned, map textures loaded in GPU) |
+| IsMaterialValid | Check if material is valid (shader assigned, map textures loaded in GPU) |
 | LoadFontData | Load font data for further use |
 | LoadMaterialDefault | Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps) |
 | LoadMaterials | Load materials from model file |

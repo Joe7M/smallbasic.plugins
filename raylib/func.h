@@ -1,5 +1,5 @@
 //
-// Change working directory, return true on success
+// Change working directory, returns 0 on success
 //
 static int cmd_changedirectory(int argc, slib_par_t *params, var_t *retval) {
   auto dirPath = get_param_str(argc, params, 0, 0);
@@ -394,7 +394,7 @@ static int cmd_decompressdata(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a directory path exists
+// Check if directory path exists
 //
 static int cmd_directoryexists(int argc, slib_par_t *params, var_t *retval) {
   auto dirPath = get_param_str(argc, params, 0, 0);
@@ -595,7 +595,7 @@ static int cmd_fade(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Copy file from one path to another, dstPath created if it doesn't exist
+// Copy file from one path to another, dstPath created if it doesn't exist, returns 0 on success
 //
 static int cmd_filecopy(int argc, slib_par_t *params, var_t *retval) {
   auto srcPath = get_param_str(argc, params, 0, 0);
@@ -616,7 +616,7 @@ static int cmd_fileexists(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Move file from one directory to another, dstPath created if it doesn't exist
+// Move file from one directory to another, dstPath created if it doesn't exist, returns 0 on success
 //
 static int cmd_filemove(int argc, slib_par_t *params, var_t *retval) {
   auto srcPath = get_param_str(argc, params, 0, 0);
@@ -627,7 +627,7 @@ static int cmd_filemove(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Remove file (if exists)
+// Remove file (if exists), returns 0 on success
 //
 static int cmd_fileremove(int argc, slib_par_t *params, var_t *retval) {
   auto fileName = get_param_str(argc, params, 0, 0);
@@ -637,7 +637,7 @@ static int cmd_fileremove(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Rename file (if exists)
+// Rename file (if exists), returns 0 on success
 //
 static int cmd_filerename(int argc, slib_par_t *params, var_t *retval) {
   auto fileName = get_param_str(argc, params, 0, 0);
@@ -648,7 +648,7 @@ static int cmd_filerename(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Find text in existing file
+// Find text in existing file, returns -1 if index not found or index otherwise
 //
 static int cmd_filetextfindindex(int argc, slib_par_t *params, var_t *retval) {
   auto fileName = get_param_str(argc, params, 0, 0);
@@ -659,7 +659,7 @@ static int cmd_filetextfindindex(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Replace text in an existing file
+// Replace text in an existing file, returns 0 on success
 //
 static int cmd_filetextreplace(int argc, slib_par_t *params, var_t *retval) {
   auto fileName = get_param_str(argc, params, 0, 0);
@@ -1547,7 +1547,7 @@ static int cmd_getmusictimeplayed(int argc, slib_par_t *params, var_t *retval) {
 // Get Color from a source pixel pointer of certain format
 //
 static int cmd_getpixelcolor(int argc, slib_par_t *params, var_t *retval) {
-  auto srcPtr = (void *)get_param_int_t(argc, params, 0, 0);
+  auto srcPtr = (const void *)get_param_int_t(argc, params, 0, 0);
   auto format = get_param_int(argc, params, 1, 0);
   auto fnResult = GetPixelColor(srcPtr, format);
   v_setcolor(retval, fnResult);
@@ -2130,7 +2130,7 @@ static int cmd_iscursoronscreen(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a file has been dropped into window
+// Check if file has been dropped into window
 //
 static int cmd_isfiledropped(int argc, slib_par_t *params, var_t *retval) {
   auto fnResult = IsFileDropped();
@@ -2160,7 +2160,7 @@ static int cmd_isfilenamevalid(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
+// Check if font is valid (font data loaded, WARNING: GPU texture not checked)
 //
 static int cmd_isfontvalid(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -2176,7 +2176,7 @@ static int cmd_isfontvalid(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a gamepad is available
+// Check if gamepad is available
 //
 static int cmd_isgamepadavailable(int argc, slib_par_t *params, var_t *retval) {
   auto gamepad = get_param_int(argc, params, 0, 0);
@@ -2186,7 +2186,7 @@ static int cmd_isgamepadavailable(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a gamepad button is being pressed
+// Check if gamepad button is being pressed
 //
 static int cmd_isgamepadbuttondown(int argc, slib_par_t *params, var_t *retval) {
   auto gamepad = get_param_int(argc, params, 0, 0);
@@ -2197,7 +2197,7 @@ static int cmd_isgamepadbuttondown(int argc, slib_par_t *params, var_t *retval) 
 }
 
 //
-// Check if a gamepad button has been pressed once
+// Check if gamepad button has been pressed once
 //
 static int cmd_isgamepadbuttonpressed(int argc, slib_par_t *params, var_t *retval) {
   auto gamepad = get_param_int(argc, params, 0, 0);
@@ -2208,7 +2208,7 @@ static int cmd_isgamepadbuttonpressed(int argc, slib_par_t *params, var_t *retva
 }
 
 //
-// Check if a gamepad button has been released once
+// Check if gamepad button has been released once
 //
 static int cmd_isgamepadbuttonreleased(int argc, slib_par_t *params, var_t *retval) {
   auto gamepad = get_param_int(argc, params, 0, 0);
@@ -2219,7 +2219,7 @@ static int cmd_isgamepadbuttonreleased(int argc, slib_par_t *params, var_t *retv
 }
 
 //
-// Check if a gamepad button is NOT being pressed
+// Check if gamepad button is NOT being pressed
 //
 static int cmd_isgamepadbuttonup(int argc, slib_par_t *params, var_t *retval) {
   auto gamepad = get_param_int(argc, params, 0, 0);
@@ -2230,7 +2230,7 @@ static int cmd_isgamepadbuttonup(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a gesture has been detected
+// Check if gesture has been detected
 //
 static int cmd_isgesturedetected(int argc, slib_par_t *params, var_t *retval) {
   auto gesture = get_param_int(argc, params, 0, 0);
@@ -2256,7 +2256,7 @@ static int cmd_isimagevalid(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a key is being pressed
+// Check if key is being pressed
 //
 static int cmd_iskeydown(int argc, slib_par_t *params, var_t *retval) {
   auto key = get_param_int(argc, params, 0, 0);
@@ -2266,7 +2266,7 @@ static int cmd_iskeydown(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a key has been pressed once
+// Check if key has been pressed once
 //
 static int cmd_iskeypressed(int argc, slib_par_t *params, var_t *retval) {
   auto key = get_param_int(argc, params, 0, 0);
@@ -2276,7 +2276,7 @@ static int cmd_iskeypressed(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a key has been pressed again
+// Check if key has been pressed again
 //
 static int cmd_iskeypressedrepeat(int argc, slib_par_t *params, var_t *retval) {
   auto key = get_param_int(argc, params, 0, 0);
@@ -2286,7 +2286,7 @@ static int cmd_iskeypressedrepeat(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a key has been released once
+// Check if key has been released once
 //
 static int cmd_iskeyreleased(int argc, slib_par_t *params, var_t *retval) {
   auto key = get_param_int(argc, params, 0, 0);
@@ -2296,7 +2296,7 @@ static int cmd_iskeyreleased(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a key is NOT being pressed
+// Check if key is NOT being pressed
 //
 static int cmd_iskeyup(int argc, slib_par_t *params, var_t *retval) {
   auto key = get_param_int(argc, params, 0, 0);
@@ -2323,7 +2323,7 @@ static int cmd_ismodelanimationvalid(int argc, slib_par_t *params, var_t *retval
 }
 
 //
-// Check if a model is valid (loaded in GPU, VAO/VBOs)
+// Check if model is valid (loaded in GPU, VAO/VBOs)
 //
 static int cmd_ismodelvalid(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -2339,7 +2339,7 @@ static int cmd_ismodelvalid(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a mouse button is being pressed
+// Check if mouse button is being pressed
 //
 static int cmd_ismousebuttondown(int argc, slib_par_t *params, var_t *retval) {
   auto button = get_param_int(argc, params, 0, 0);
@@ -2349,7 +2349,7 @@ static int cmd_ismousebuttondown(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a mouse button has been pressed once
+// Check if mouse button has been pressed once
 //
 static int cmd_ismousebuttonpressed(int argc, slib_par_t *params, var_t *retval) {
   auto button = get_param_int(argc, params, 0, 0);
@@ -2359,7 +2359,7 @@ static int cmd_ismousebuttonpressed(int argc, slib_par_t *params, var_t *retval)
 }
 
 //
-// Check if a mouse button has been released once
+// Check if mouse button has been released once
 //
 static int cmd_ismousebuttonreleased(int argc, slib_par_t *params, var_t *retval) {
   auto button = get_param_int(argc, params, 0, 0);
@@ -2369,7 +2369,7 @@ static int cmd_ismousebuttonreleased(int argc, slib_par_t *params, var_t *retval
 }
 
 //
-// Check if a mouse button is NOT being pressed
+// Check if mouse button is NOT being pressed
 //
 static int cmd_ismousebuttonup(int argc, slib_par_t *params, var_t *retval) {
   auto button = get_param_int(argc, params, 0, 0);
@@ -2395,7 +2395,7 @@ static int cmd_ismusicstreamplaying(int argc, slib_par_t *params, var_t *retval)
 }
 
 //
-// Check if a music stream is valid (context and buffers initialized)
+// Check if music stream is valid (context and buffers initialized)
 //
 static int cmd_ismusicvalid(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -2411,7 +2411,17 @@ static int cmd_ismusicvalid(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a given path is a file or a directory
+// Check if given path points to a directory
+//
+static int cmd_ispathdirectory(int argc, slib_par_t *params, var_t *retval) {
+  auto path = get_param_str(argc, params, 0, 0);
+  auto fnResult = IsPathDirectory(path);
+  v_setint(retval, fnResult);
+  return 1;
+}
+
+//
+// Check if given path points to a file
 //
 static int cmd_ispathfile(int argc, slib_par_t *params, var_t *retval) {
   auto path = get_param_str(argc, params, 0, 0);
@@ -2421,7 +2431,7 @@ static int cmd_ispathfile(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a render texture is valid (loaded in GPU)
+// Check if render texture is valid (loaded in GPU)
 //
 static int cmd_isrendertexturevalid(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -2437,7 +2447,7 @@ static int cmd_isrendertexturevalid(int argc, slib_par_t *params, var_t *retval)
 }
 
 //
-// Check if a shader is valid (loaded on GPU)
+// Check if shader is valid (loaded on GPU)
 //
 static int cmd_isshadervalid(int argc, slib_par_t *params, var_t *retval) {
   auto shader = get_param_shader(argc, params, 0);
@@ -2447,7 +2457,7 @@ static int cmd_isshadervalid(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a sound is currently playing
+// Check if sound is currently playing
 //
 static int cmd_issoundplaying(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -2463,7 +2473,7 @@ static int cmd_issoundplaying(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a sound is valid (data loaded and buffers initialized)
+// Check if sound is valid (data loaded and buffers initialized)
 //
 static int cmd_issoundvalid(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -2479,7 +2489,7 @@ static int cmd_issoundvalid(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Check if a texture is valid (loaded in GPU)
+// Check if texture is valid (loaded in GPU)
 //
 static int cmd_istexturevalid(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -2627,7 +2637,7 @@ static int cmd_loaddirectoryfiles(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Load directory filepaths with extension filtering and subdir scan; some filters available: `*.*`,`FILES*`,`DIRS*`
+// Load directory filepaths with extension filtering and subdir scan; some filters available: '*.*','FILES*','DIRS*'
 //
 static int cmd_loaddirectoryfilesex(int argc, slib_par_t *params, var_t *retval) {
   auto basePath = get_param_str(argc, params, 0, 0);
@@ -2681,7 +2691,7 @@ static int cmd_loadfont(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height
+// Load font from file with defined codepoints and generation size, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height
 //
 static int cmd_loadfontex(int argc, slib_par_t *params, var_t *retval) {
   auto fileName = get_param_str(argc, params, 0, 0);

@@ -139,21 +139,21 @@ static int cmd_drawbillboard(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a billboard texture defined by source and rotation
+// Draw a billboard texture defined by source rectangle with scaling and rotation
 //
 static int cmd_drawbillboardpro(int argc, slib_par_t *params, var_t *retval) {
   int result;
   int texture_id = get_texture_id(argc, params, 1, retval);
   if (texture_id != -1) {
     auto camera = get_camera_3d(argc, params, 0);
-    auto source = get_param_rect(argc, params, 2);
+    auto rec = get_param_rect(argc, params, 2);
     auto position = get_param_vec3(argc, params, 3);
     auto up = get_param_vec3(argc, params, 4);
     auto size = get_param_vec2(argc, params, 5);
     auto origin = get_param_vec2(argc, params, 6);
     auto rotation = get_param_num(argc, params, 7, 0);
     auto tint = get_param_color(argc, params, 8);
-    DrawBillboardPro(camera, _textureMap.at(texture_id), source, position, up, size, origin, rotation, tint);
+    DrawBillboardPro(camera, _textureMap.at(texture_id), rec, position, up, size, origin, rotation, tint);
     result = 1;
   } else {
     result = 0;
@@ -162,18 +162,18 @@ static int cmd_drawbillboardpro(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a billboard texture defined by source
+// Draw a billboard texture defined by rectangle
 //
 static int cmd_drawbillboardrec(int argc, slib_par_t *params, var_t *retval) {
   int result;
   int texture_id = get_texture_id(argc, params, 1, retval);
   if (texture_id != -1) {
     auto camera = get_camera_3d(argc, params, 0);
-    auto source = get_param_rect(argc, params, 2);
+    auto rec = get_param_rect(argc, params, 2);
     auto position = get_param_vec3(argc, params, 3);
     auto size = get_param_vec2(argc, params, 4);
     auto tint = get_param_color(argc, params, 5);
-    DrawBillboardRec(camera, _textureMap.at(texture_id), source, position, size, tint);
+    DrawBillboardRec(camera, _textureMap.at(texture_id), rec, position, size, tint);
     result = 1;
   } else {
     result = 0;
@@ -265,6 +265,18 @@ static int cmd_drawcirclelines(int argc, slib_par_t *params, var_t *retval) {
   auto radius = get_param_num(argc, params, 2, 0);
   auto color = get_param_color(argc, params, 3);
   DrawCircleLines(centerX, centerY, radius, color);
+  return 1;
+}
+
+//
+// Draw circle outline with line thickness
+//
+static int cmd_drawcirclelinesex(int argc, slib_par_t *params, var_t *retval) {
+  auto center = get_param_vec2(argc, params, 0);
+  auto radius = get_param_num(argc, params, 1, 0);
+  auto thick = get_param_num(argc, params, 2, 0);
+  auto color = get_param_color(argc, params, 3);
+  DrawCircleLinesEx(center, radius, thick, color);
   return 1;
 }
 
@@ -374,9 +386,9 @@ static int cmd_drawcylinder(int argc, slib_par_t *params, var_t *retval) {
   auto radiusTop = get_param_num(argc, params, 1, 0);
   auto radiusBottom = get_param_num(argc, params, 2, 0);
   auto height = get_param_num(argc, params, 3, 0);
-  auto slices = get_param_int(argc, params, 4, 0);
+  auto sides = get_param_int(argc, params, 4, 0);
   auto color = get_param_color(argc, params, 5);
-  DrawCylinder(position, radiusTop, radiusBottom, height, slices, color);
+  DrawCylinder(position, radiusTop, radiusBottom, height, sides, color);
   return 1;
 }
 
@@ -402,9 +414,9 @@ static int cmd_drawcylinderwires(int argc, slib_par_t *params, var_t *retval) {
   auto radiusTop = get_param_num(argc, params, 1, 0);
   auto radiusBottom = get_param_num(argc, params, 2, 0);
   auto height = get_param_num(argc, params, 3, 0);
-  auto slices = get_param_int(argc, params, 4, 0);
+  auto sides = get_param_int(argc, params, 4, 0);
   auto color = get_param_color(argc, params, 5);
-  DrawCylinderWires(position, radiusTop, radiusBottom, height, slices, color);
+  DrawCylinderWires(position, radiusTop, radiusBottom, height, sides, color);
   return 1;
 }
 
@@ -416,9 +428,9 @@ static int cmd_drawcylinderwiresex(int argc, slib_par_t *params, var_t *retval) 
   auto endPos = get_param_vec3(argc, params, 1);
   auto startRadius = get_param_num(argc, params, 2, 0);
   auto endRadius = get_param_num(argc, params, 3, 0);
-  auto slices = get_param_int(argc, params, 4, 0);
+  auto sides = get_param_int(argc, params, 4, 0);
   auto color = get_param_color(argc, params, 5);
-  DrawCylinderWiresEx(startPos, endPos, startRadius, endRadius, slices, color);
+  DrawCylinderWiresEx(startPos, endPos, startRadius, endRadius, sides, color);
   return 1;
 }
 
@@ -594,7 +606,7 @@ static int cmd_drawmodel(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a model with extended parameters
+// Draw a model with custom transform
 //
 static int cmd_drawmodelex(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -632,7 +644,7 @@ static int cmd_drawmodelwires(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a model wires (with texture if set) with extended parameters
+// Draw a model wires with custom transform
 //
 static int cmd_drawmodelwiresex(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -720,16 +732,16 @@ static int cmd_drawpolylines(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a polygon outline of n sides with extended parameters
+// Draw a polygon outline of n sides with line thickness
 //
 static int cmd_drawpolylinesex(int argc, slib_par_t *params, var_t *retval) {
   auto center = get_param_vec2(argc, params, 0);
   auto sides = get_param_int(argc, params, 1, 0);
   auto radius = get_param_num(argc, params, 2, 0);
   auto rotation = get_param_num(argc, params, 3, 0);
-  auto lineThick = get_param_num(argc, params, 4, 0);
+  auto thick = get_param_num(argc, params, 4, 0);
   auto color = get_param_color(argc, params, 5);
-  DrawPolyLinesEx(center, sides, radius, rotation, lineThick, color);
+  DrawPolyLinesEx(center, sides, radius, rotation, thick, color);
   return 1;
 }
 
@@ -757,15 +769,15 @@ static int cmd_drawrectangle(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a gradient-filled rectangle with custom vertex colors
+// Draw a gradient-filled rectangle with custom vertex colors, counter-clockwise color order
 //
 static int cmd_drawrectanglegradientex(int argc, slib_par_t *params, var_t *retval) {
   auto rec = get_param_rect(argc, params, 0);
-  auto topLeft = get_param_color(argc, params, 1);
-  auto bottomLeft = get_param_color(argc, params, 2);
-  auto bottomRight = get_param_color(argc, params, 3);
-  auto topRight = get_param_color(argc, params, 4);
-  DrawRectangleGradientEx(rec, topLeft, bottomLeft, bottomRight, topRight);
+  auto col1 = get_param_color(argc, params, 1);
+  auto col2 = get_param_color(argc, params, 2);
+  auto col3 = get_param_color(argc, params, 3);
+  auto col4 = get_param_color(argc, params, 4);
+  DrawRectangleGradientEx(rec, col1, col2, col3, col4);
   return 1;
 }
 
@@ -811,13 +823,13 @@ static int cmd_drawrectanglelines(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw rectangle outline with extended parameters
+// Draw rectangle outline with line thickness
 //
 static int cmd_drawrectanglelinesex(int argc, slib_par_t *params, var_t *retval) {
   auto rec = get_param_rect(argc, params, 0);
-  auto lineThick = get_param_num(argc, params, 1, 0);
+  auto thick = get_param_num(argc, params, 1, 0);
   auto color = get_param_color(argc, params, 2);
-  DrawRectangleLinesEx(rec, lineThick, color);
+  DrawRectangleLinesEx(rec, thick, color);
   return 1;
 }
 
@@ -868,15 +880,15 @@ static int cmd_drawrectangleroundedlines(int argc, slib_par_t *params, var_t *re
 }
 
 //
-// Draw rectangle lines with rounded edges outline
+// Draw rectangle lines with rounded edges outline and line thickness
 //
 static int cmd_drawrectangleroundedlinesex(int argc, slib_par_t *params, var_t *retval) {
   auto rec = get_param_rect(argc, params, 0);
   auto roundness = get_param_num(argc, params, 1, 0);
   auto segments = get_param_int(argc, params, 2, 0);
-  auto lineThick = get_param_num(argc, params, 3, 0);
+  auto thick = get_param_num(argc, params, 3, 0);
   auto color = get_param_color(argc, params, 4);
-  DrawRectangleRoundedLinesEx(rec, roundness, segments, lineThick, color);
+  DrawRectangleRoundedLinesEx(rec, roundness, segments, thick, color);
   return 1;
 }
 
@@ -933,7 +945,7 @@ static int cmd_drawsphere(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw sphere with extended parameters
+// Draw sphere with defined rings and slices
 //
 static int cmd_drawsphereex(int argc, slib_par_t *params, var_t *retval) {
   auto centerPos = get_param_vec3(argc, params, 0);
@@ -1199,7 +1211,7 @@ static int cmd_drawtexture(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a Texture2D with extended parameters
+// Draw a Texture2D with rotation and scale
 //
 static int cmd_drawtextureex(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -1225,11 +1237,11 @@ static int cmd_drawtexturenpatch(int argc, slib_par_t *params, var_t *retval) {
   int texture_id = get_texture_id(argc, params, 0, retval);
   if (texture_id != -1) {
     auto nPatchInfo = get_param_npatch(argc, params, 1);
-    auto dest = get_param_rect(argc, params, 2);
+    auto dstrec = get_param_rect(argc, params, 2);
     auto origin = get_param_vec2(argc, params, 3);
     auto rotation = get_param_num(argc, params, 4, 0);
     auto tint = get_param_color(argc, params, 5);
-    DrawTextureNPatch(_textureMap.at(texture_id), nPatchInfo, dest, origin, rotation, tint);
+    DrawTextureNPatch(_textureMap.at(texture_id), nPatchInfo, dstrec, origin, rotation, tint);
     result = 1;
   } else {
     result = 0;
@@ -1238,18 +1250,18 @@ static int cmd_drawtexturenpatch(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a part of a texture defined by a rectangle with 'pro' parameters
+// Draw a part of a texture defined by a source rectangle to destination rectangle, with scaling and rotation
 //
 static int cmd_drawtexturepro(int argc, slib_par_t *params, var_t *retval) {
   int result;
   int texture_id = get_texture_id(argc, params, 0, retval);
   if (texture_id != -1) {
-    auto source = get_param_rect(argc, params, 1);
-    auto dest = get_param_rect(argc, params, 2);
+    auto srcrec = get_param_rect(argc, params, 1);
+    auto dstrec = get_param_rect(argc, params, 2);
     auto origin = get_param_vec2(argc, params, 3);
     auto rotation = get_param_num(argc, params, 4, 0);
     auto tint = get_param_color(argc, params, 5);
-    DrawTexturePro(_textureMap.at(texture_id), source, dest, origin, rotation, tint);
+    DrawTexturePro(_textureMap.at(texture_id), srcrec, dstrec, origin, rotation, tint);
     result = 1;
   } else {
     result = 0;
@@ -1264,10 +1276,10 @@ static int cmd_drawtexturerec(int argc, slib_par_t *params, var_t *retval) {
   int result;
   int texture_id = get_texture_id(argc, params, 0, retval);
   if (texture_id != -1) {
-    auto source = get_param_rect(argc, params, 1);
+    auto rec = get_param_rect(argc, params, 1);
     auto position = get_param_vec2(argc, params, 2);
     auto tint = get_param_color(argc, params, 3);
-    DrawTextureRec(_textureMap.at(texture_id), source, position, tint);
+    DrawTextureRec(_textureMap.at(texture_id), rec, position, tint);
     result = 1;
   } else {
     result = 0;
@@ -1293,7 +1305,7 @@ static int cmd_drawtexturev(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a color-filled triangle (vertex in counter-clockwise order!)
+// Draw a color-filled triangle, counter-clockwise vertex order
 //
 static int cmd_drawtriangle(int argc, slib_par_t *params, var_t *retval) {
   auto v1 = get_param_vec2(argc, params, 0);
@@ -1305,7 +1317,7 @@ static int cmd_drawtriangle(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a color-filled triangle (vertex in counter-clockwise order!)
+// Draw a color-filled triangle, counter-clockwise vertex order
 //
 static int cmd_drawtriangle3d(int argc, slib_par_t *params, var_t *retval) {
   auto v1 = get_param_vec3(argc, params, 0);
@@ -1328,7 +1340,7 @@ static int cmd_drawtrianglefan(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw triangle with interpolated colors (vertex in counter-clockwise order!)
+// Draw triangle with interpolated colors, counter-clockwise vertex/color order
 //
 static int cmd_drawtrianglegradient(int argc, slib_par_t *params, var_t *retval) {
   auto v1 = get_param_vec2(argc, params, 0);
@@ -1342,7 +1354,7 @@ static int cmd_drawtrianglegradient(int argc, slib_par_t *params, var_t *retval)
 }
 
 //
-// Draw triangle outline (vertex in counter-clockwise order!)
+// Draw triangle outline, counter-clockwise vertex order
 //
 static int cmd_drawtrianglelines(int argc, slib_par_t *params, var_t *retval) {
   auto v1 = get_param_vec2(argc, params, 0);
@@ -1708,25 +1720,6 @@ static int cmd_imagedither(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
-// Draw a source image within a destination image (tint applied to source)
-//
-static int cmd_imagedraw(int argc, slib_par_t *params, var_t *retval) {
-  int result;
-  int dst_id = get_image_id(argc, params, 0, retval);
-  int src_id = get_image_id(argc, params, 1, retval);
-  if (dst_id != -1 && src_id != -1) {
-    auto srcRec = get_param_rect(argc, params, 2);
-    auto dstRec = get_param_rect(argc, params, 3);
-    auto tint = get_param_color(argc, params, 4);
-    ImageDraw(&_imageMap.at(dst_id), _imageMap.at(src_id), srcRec, dstRec, tint);
-    result = 1;
-  } else {
-    result = 0;
-  }
-  return result;
-}
-
-//
 // Draw a filled circle within an image
 //
 static int cmd_imagedrawcircle(int argc, slib_par_t *params, var_t *retval) {
@@ -1738,6 +1731,25 @@ static int cmd_imagedrawcircle(int argc, slib_par_t *params, var_t *retval) {
     auto radius = get_param_int(argc, params, 3, 0);
     auto color = get_param_color(argc, params, 4);
     ImageDrawCircle(&_imageMap.at(dst_id), centerX, centerY, radius, color);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
+// Draw a gradient-filled circle within an image
+//
+static int cmd_imagedrawcirclegradient(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  if (dst_id != -1) {
+    auto center = get_param_vec2(argc, params, 1);
+    auto radius = get_param_num(argc, params, 2, 0);
+    auto inner = get_param_color(argc, params, 3);
+    auto outer = get_param_color(argc, params, 4);
+    ImageDrawCircleGradient(&_imageMap.at(dst_id), center, radius, inner, outer);
     result = 1;
   } else {
     result = 0;
@@ -1801,6 +1813,85 @@ static int cmd_imagedrawcirclev(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
+// Draw an image within an image
+//
+static int cmd_imagedrawimage(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  int src_id = get_image_id(argc, params, 1, retval);
+  if (dst_id != -1 && src_id != -1) {
+    auto posX = get_param_int(argc, params, 2, 0);
+    auto posY = get_param_int(argc, params, 3, 0);
+    auto tint = get_param_color(argc, params, 4);
+    ImageDrawImage(&_imageMap.at(dst_id), _imageMap.at(src_id), posX, posY, tint);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
+// Draw an image with scaling and rotation within an image
+//
+static int cmd_imagedrawimageex(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  int src_id = get_image_id(argc, params, 1, retval);
+  if (dst_id != -1 && src_id != -1) {
+    auto position = get_param_vec2(argc, params, 2);
+    auto rotation = get_param_num(argc, params, 3, 0);
+    auto scale = get_param_num(argc, params, 4, 0);
+    auto tint = get_param_color(argc, params, 5);
+    ImageDrawImageEx(&_imageMap.at(dst_id), _imageMap.at(src_id), position, rotation, scale, tint);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
+// Draw a part of an image defined by a rectangle into destination rectangle, with scaling and rotation, within an image
+//
+static int cmd_imagedrawimagepro(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  int src_id = get_image_id(argc, params, 1, retval);
+  if (dst_id != -1 && src_id != -1) {
+    auto srcRec = get_param_rect(argc, params, 2);
+    auto dstRec = get_param_rect(argc, params, 3);
+    auto origin = get_param_vec2(argc, params, 4);
+    auto rotation = get_param_num(argc, params, 5, 0);
+    auto tint = get_param_color(argc, params, 6);
+    ImageDrawImagePro(&_imageMap.at(dst_id), _imageMap.at(src_id), srcRec, dstRec, origin, rotation, tint);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
+// Draw a part of an image defined by a rectangle within an image
+//
+static int cmd_imagedrawimagerec(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  int src_id = get_image_id(argc, params, 1, retval);
+  if (dst_id != -1 && src_id != -1) {
+    auto srcRec = get_param_rect(argc, params, 2);
+    auto position = get_param_vec2(argc, params, 3);
+    auto tint = get_param_color(argc, params, 4);
+    ImageDrawImageRec(&_imageMap.at(dst_id), _imageMap.at(src_id), srcRec, position, tint);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
 // Draw line within an image
 //
 static int cmd_imagedrawline(int argc, slib_par_t *params, var_t *retval) {
@@ -1832,6 +1923,24 @@ static int cmd_imagedrawlineex(int argc, slib_par_t *params, var_t *retval) {
     auto thick = get_param_int(argc, params, 3, 0);
     auto color = get_param_color(argc, params, 4);
     ImageDrawLineEx(&_imageMap.at(dst_id), start, end, thick, color);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
+// Draw a lines sequence within an image
+//
+static int cmd_imagedrawlinestrip(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  if (dst_id != -1) {
+    auto points = (Vector2 *)get_param_vec2_array(argc, params, 1);
+    auto pointCount = get_param_int(argc, params, 2, 0);
+    auto color = get_param_color(argc, params, 3);
+    ImageDrawLineStrip(&_imageMap.at(dst_id), points, pointCount, color);
     result = 1;
   } else {
     result = 0;
@@ -1913,6 +2022,26 @@ static int cmd_imagedrawrectangle(int argc, slib_par_t *params, var_t *retval) {
 }
 
 //
+// Draw rectangle with gradient colors within an image, counter-clockwise color order
+//
+static int cmd_imagedrawrectanglegradientex(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  if (dst_id != -1) {
+    auto rec = get_param_rect(argc, params, 1);
+    auto col1 = get_param_color(argc, params, 2);
+    auto col2 = get_param_color(argc, params, 3);
+    auto col3 = get_param_color(argc, params, 4);
+    auto col4 = get_param_color(argc, params, 5);
+    ImageDrawRectangleGradientEx(&_imageMap.at(dst_id), rec, col1, col2, col3, col4);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
 // Draw rectangle lines within an image
 //
 static int cmd_imagedrawrectanglelines(int argc, slib_par_t *params, var_t *retval) {
@@ -1933,7 +2062,7 @@ static int cmd_imagedrawrectanglelines(int argc, slib_par_t *params, var_t *retv
 }
 
 //
-// Draw rectangle lines within an image with extended parameters
+// Draw rectangle lines within an image with line thickness
 //
 static int cmd_imagedrawrectanglelinesex(int argc, slib_par_t *params, var_t *retval) {
   int result;
@@ -1943,6 +2072,25 @@ static int cmd_imagedrawrectanglelinesex(int argc, slib_par_t *params, var_t *re
     auto thick = get_param_int(argc, params, 2, 0);
     auto color = get_param_color(argc, params, 3);
     ImageDrawRectangleLinesEx(&_imageMap.at(dst_id), rec, thick, color);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
+// Draw a color-filled rectangle with pro parameters within and image
+//
+static int cmd_imagedrawrectanglepro(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  if (dst_id != -1) {
+    auto rec = get_param_rect(argc, params, 1);
+    auto origin = get_param_vec2(argc, params, 2);
+    auto rotation = get_param_num(argc, params, 3, 0);
+    auto color = get_param_color(argc, params, 4);
+    ImageDrawRectanglePro(&_imageMap.at(dst_id), rec, origin, rotation, color);
     result = 1;
   } else {
     result = 0;
@@ -2019,6 +2167,29 @@ static int cmd_imagedrawtextex(int argc, slib_par_t *params, var_t *retval) {
     auto spacing = get_param_num(argc, params, 5, 0);
     auto tint = get_param_color(argc, params, 6);
     ImageDrawTextEx(&_imageMap.at(dst_id), _fontMap.at(font_id), text, position, fontSize, spacing, tint);
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+}
+
+//
+// Draw text using Font and pro parameters (rotation)
+//
+static int cmd_imagedrawtextpro(int argc, slib_par_t *params, var_t *retval) {
+  int result;
+  int dst_id = get_image_id(argc, params, 0, retval);
+  int font_id = get_font_id(argc, params, 1, retval);
+  if (dst_id != -1 && font_id != -1) {
+    auto text = get_param_str(argc, params, 2, 0);
+    auto position = get_param_vec2(argc, params, 3);
+    auto origin = get_param_vec2(argc, params, 4);
+    auto rotation = get_param_num(argc, params, 5, 0);
+    auto fontSize = get_param_num(argc, params, 6, 0);
+    auto spacing = get_param_num(argc, params, 7, 0);
+    auto tint = get_param_color(argc, params, 8);
+    ImageDrawTextPro(&_imageMap.at(dst_id), _fontMap.at(font_id), text, position, origin, rotation, fontSize, spacing, tint);
     result = 1;
   } else {
     result = 0;
@@ -2837,8 +3008,8 @@ static int cmd_setshapestexture(int argc, slib_par_t *params, var_t *retval) {
   int result;
   int texture_id = get_texture_id(argc, params, 0, retval);
   if (texture_id != -1) {
-    auto source = get_param_rect(argc, params, 1);
-    SetShapesTexture(_textureMap.at(texture_id), source);
+    auto rec = get_param_rect(argc, params, 1);
+    SetShapesTexture(_textureMap.at(texture_id), rec);
     result = 1;
   } else {
     result = 0;
