@@ -66,15 +66,12 @@ include(CheckLanguage)
 if(LLAMA_BACKEND STREQUAL "CPU")
   message(STATUS "llama.cpp backend: CPU-only")
   set(GGML_NATIVE ON CACHE BOOL "" FORCE)  # enable CPU SIMD optimizations
-
 elseif(LLAMA_BACKEND STREQUAL "GPU")
   message(STATUS "llama.cpp backend: GPU (non-CUDA)")
   set(GGML_OPENMP ON CACHE BOOL "" FORCE)  # parallel CPU fallback
   # GPU non-CUDA options can be added here in the future
-
 elseif(LLAMA_BACKEND STREQUAL "CUDA")
   message(STATUS "llama.cpp backend: CUDA")
-
   check_language(CUDA)
   if(CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
@@ -82,10 +79,8 @@ elseif(LLAMA_BACKEND STREQUAL "CUDA")
   else()
     message(FATAL_ERROR "CUDA backend requested but nvcc not found")
   endif()
-
 elseif(LLAMA_BACKEND STREQUAL "AUTO")
   message(STATUS "llama.cpp backend: AUTO")
-
   check_language(CUDA)
   if(CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
@@ -96,7 +91,6 @@ elseif(LLAMA_BACKEND STREQUAL "AUTO")
     set(GGML_NATIVE ON CACHE BOOL "" FORCE)
     message(STATUS "CUDA not found – using CPU/OpenMP")
   endif()
-
 else()
   message(FATAL_ERROR "Invalid LLAMA_BACKEND value: ${LLAMA_BACKEND}")
 endif()
@@ -147,120 +141,6 @@ set_target_properties(llm PROPERTIES
   POSITION_INDEPENDENT_CODE ON
   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
 )
-
-# -----------------------------
-# nitro agent application
-# (only built when notcurses is available)
-# -----------------------------
-find_package(PkgConfig QUIET)
-
-# ── notcurses ─────────────────────────────────────────────────────────────
-set(NC_FOUND FALSE)
-set(NC_TARGET "")
-if(DEFINED NOTCURSES_DIR)
-  # Explicit path — create an imported target manually
-  find_library(NC_LIB      NAMES notcurses      HINTS "${NOTCURSES_DIR}/lib" REQUIRED)
-  find_library(NC_CORE_LIB NAMES notcurses-core HINTS "${NOTCURSES_DIR}/lib")
-  add_library(notcurses_imported INTERFACE IMPORTED)
-  target_include_directories(notcurses_imported INTERFACE "${NOTCURSES_DIR}/include")
-  target_link_libraries(notcurses_imported INTERFACE ${NC_LIB})
-  if(NC_CORE_LIB)
-    target_link_libraries(notcurses_imported INTERFACE ${NC_CORE_LIB})
-  endif()
-  set(NC_TARGET notcurses_imported)
-  set(NC_FOUND TRUE)
-elseif(PkgConfig_FOUND)
-  pkg_check_modules(NC QUIET IMPORTED_TARGET notcurses)
-  if(NC_FOUND)
-    set(NC_TARGET PkgConfig::NC)
-  endif()
-else()
-  find_library(NC_LIB      NAMES notcurses)
-  find_library(NC_CORE_LIB NAMES notcurses-core)
-  if(NC_LIB AND NC_CORE_LIB)
-    add_library(notcurses_imported INTERFACE IMPORTED)
-    target_link_libraries(notcurses_imported INTERFACE ${NC_LIB} ${NC_CORE_LIB})
-    set(NC_TARGET notcurses_imported)
-    set(NC_FOUND TRUE)
-  endif()
-endif()
-
-# ── libcurl ───────────────────────────────────────────────────────────────
-# Try the modern CMake find-module first (ships with CMake ≥ 3.12).
-# Fall back to pkg-config, then a raw library search.
-set(CURL_FOUND_INTERNAL FALSE)
-set(CURL_TARGET "")
-
-if(DEFINED CURL_DIR)
-  # Explicit path supplied by the user (-DCURL_DIR=...)
-  find_library(CURL_LIB NAMES curl HINTS "${CURL_DIR}/lib" REQUIRED)
-  find_path(CURL_INCLUDE NAMES curl/curl.h HINTS "${CURL_DIR}/include" REQUIRED)
-  add_library(curl_imported INTERFACE IMPORTED)
-  target_include_directories(curl_imported INTERFACE "${CURL_INCLUDE}")
-  target_link_libraries(curl_imported INTERFACE ${CURL_LIB})
-  set(CURL_TARGET curl_imported)
-  set(CURL_FOUND_INTERNAL TRUE)
-else()
-  # CMake built-in (sets CURL::libcurl target when found)
-  find_package(CURL QUIET)
-  if(CURL_FOUND)
-    set(CURL_TARGET CURL::libcurl)
-    set(CURL_FOUND_INTERNAL TRUE)
-  elseif(PkgConfig_FOUND)
-    pkg_check_modules(CURL_PC QUIET IMPORTED_TARGET libcurl)
-    if(CURL_PC_FOUND)
-      set(CURL_TARGET PkgConfig::CURL_PC)
-      set(CURL_FOUND_INTERNAL TRUE)
-    endif()
-  endif()
-  if(NOT CURL_FOUND_INTERNAL)
-    find_library(CURL_LIB NAMES curl)
-    find_path(CURL_INCLUDE NAMES curl/curl.h)
-    if(CURL_LIB AND CURL_INCLUDE)
-      add_library(curl_imported INTERFACE IMPORTED)
-      target_include_directories(curl_imported INTERFACE "${CURL_INCLUDE}")
-      target_link_libraries(curl_imported INTERFACE ${CURL_LIB})
-      set(CURL_TARGET curl_imported)
-      set(CURL_FOUND_INTERNAL TRUE)
-    endif()
-  endif()
-endif()
-
-# ── nitro target ──────────────────────────────────────────────────────────
-if(NC_FOUND)
-  if(NOT CURL_FOUND_INTERNAL)
-    message(WARNING "libcurl not found — TOOL:CURL will be unavailable. "
-                    "Install libcurl-dev or set -DCURL_DIR=<prefix> to enable.")
-  endif()
-
-  message(STATUS "notcurses found — building nitro")
-  add_executable(nitro
-    nitro.cpp
-    llama-sb-rag.cpp
-  )
-  target_include_directories(nitro PRIVATE
-    ${LLAMA_DIR}/include
-    ${LLAMA_DIR}/ggml/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include
-  )
-  target_link_libraries(nitro PRIVATE
-    llm
-    llama
-    ggml
-    ${NC_TARGET}           # imported target carries include + lib paths
-  )
-  if(CURL_FOUND_INTERNAL)
-    target_link_libraries(nitro PRIVATE ${CURL_TARGET})
-    target_compile_definitions(nitro PRIVATE NITRO_HAVE_CURL=1)
-  else()
-    target_compile_definitions(nitro PRIVATE NITRO_HAVE_CURL=0)
-  endif()
-  set_target_properties(nitro PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-  )
-else()
-  message(STATUS "notcurses not found — skipping nitro (set -DNOTCURSES_DIR=... to enable)")
-endif()
 
 # ------------------------------------------------------------------
 # Android native library

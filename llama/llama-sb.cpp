@@ -143,15 +143,6 @@ void Llama::reset() {
   }
 }
 
-int Llama::max_tool_result_size() {
-  // 75% of space available
-  llama_memory_t mem = llama_get_memory(_ctx);
-  llama_pos pos_max = llama_memory_seq_pos_max(mem, 0);
-  int n_ctx = llama_n_ctx(_ctx);
-  int space_available = n_ctx - (pos_max + 1);
-  return std::max(256, (space_available * 3) / 4);
-}
-
 bool Llama::is_memory_flush() {
   auto result = _memory_flush;
   if (result) {
